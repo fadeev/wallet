@@ -1,0 +1,49 @@
+<template>
+  <div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      x="0px"
+      y="0px"
+      width="100%"
+      height="100%"
+      viewBox="0 0 16 16"
+    >
+      <g transform="translate(0, 0)">
+        <path
+          d="M3.707,1.849A4.549,4.549,0,0,1,4.912,3.226c.3.51.98,1.928.361,2.729C4.573,6.86,2.545,7.166,2.545,8c0,.628.889,1.344,1.364,2.045a2.433,2.433,0,0,1,0,2.728,2.544,2.544,0,0,1-.882.841"
+          fill="none"
+          stroke="#000000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          data-color="color-2"
+        ></path>
+        <path
+          d="M13.91,3.382a16.228,16.228,0,0,1-3.865,1.209c-.712.051-.818-.535-1.363-1.364-.409-.622-1.364-1.4-1.364-2.045A2.1,2.1,0,0,1,7.407.523"
+          fill="none"
+          stroke="#000000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          data-color="color-2"
+        ></path>
+        <circle
+          cx="8"
+          cy="8"
+          r="7.5"
+          fill="none"
+          stroke="#000000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></circle>
+        <path
+          d="M12.782,8.616c.029,2.1-2.708,4.725-4.1,4.157-1.22-.5-.36-1.458-.672-4.157C7.88,7.494,9.078,6.571,10.4,6.571A2.244,2.244,0,0,1,12.782,8.616Z"
+          fill="none"
+          stroke="#000000"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          data-color="color-2"
+        ></path>
+      </g>
+    </svg>
+  </div>
+</template>
