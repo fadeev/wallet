@@ -14,8 +14,9 @@ const API =
 const ADDRESS_PREFIX = "cosmos";
 
 export default {
+  namespaced: true,
   state: {
-    // API: "https://lcd.nylira.net",
+    API,
     account: {},
     chain_id: "",
     data: {},
@@ -24,33 +25,10 @@ export default {
     delegations: [],
     stakingPool: {},
     transfersIncoming: [],
+    transfersOutgoing: [],
   },
   mutations: {
-    accountUpdate(state, { account }) {
-      state.account = account;
-    },
-    chainIdSet(state, { chain_id }) {
-      state.chain_id = chain_id;
-    },
-    entitySet(state, { type, body }) {
-      const updated = {};
-      updated[type] = body;
-      state.data = { ...state.data, ...updated };
-    },
-    clientUpdate(state, { client }) {
-      state.client = client;
-    },
-    validatorsSet(state, { validators }) {
-      state.validators = validators;
-    },
-    delegationsSet(state, { delegations }) {
-      state.delegations = delegations;
-    },
-    stakingPoolSet(state, { stakingPool }) {
-      state.stakingPool = stakingPool;
-    },
-    stateSet(state, key, value) {
-      console.log(value);
+    set(state, { key, value }) {
       state[key] = value;
     },
   },
@@ -63,14 +41,13 @@ export default {
       if (mnemonic) {
         await dispatch("accountSignIn", { mnemonic });
       }
-      dispatch("transfersIncomingFetch");
     },
     async delegationsFetch({ state, commit }) {
       if (!state.client) return;
       const address = state.client.senderAddress;
       const url = `${API}/staking/delegators/${address}/delegations`;
-      const delegations = (await axios.get(url)).data.result;
-      commit("delegationsSet", { delegations });
+      const value = (await axios.get(url)).data.result;
+      commit("set", { key: "delegations", value });
     },
     async tokensSend({ state }, { amount, to_address, memo = "" }) {
       const from_address = state.client.senderAddress;
@@ -94,12 +71,14 @@ export default {
       return await state.client.signAndPost([msg], fee, memo);
     },
     async chainIdFetch({ commit }) {
-      const node_info = (await axios.get(`${API}/node_info`)).data.node_info;
-      commit("chainIdSet", { chain_id: node_info.network });
+      const url = `${API}/node_info`;
+      const value = (await axios.get(url)).data.node_info.network;
+      commit("set", { key: "chain_id", value });
     },
     async stakingPoolFetch({ commit }) {
-      const stakingPool = (await axios.get(`${API}/staking/pool`)).data.result;
-      commit("stakingPoolSet", { stakingPool });
+      const url = `${API}/staking/pool`;
+      const value = (await axios.get(url)).data.result;
+      commit("set", { key: "stakingPool", value });
     },
     async accountSignOut({ commit }) {
       localStorage.removeItem("mnemonic");
@@ -119,9 +98,11 @@ export default {
           localStorage.setItem("mnemonic", mnemonic);
           const account = acc.result.value;
           const client = new SigningCosmosClient(API, address, wallet);
-          commit("accountUpdate", { account });
-          commit("clientUpdate", { client });
+          commit("set", { key: "account", value: account });
+          commit("set", { key: "client", value: client });
           dispatch("delegationsFetch");
+          dispatch("transfersIncomingFetch");
+          dispatch("transfersOutgoingFetch");
           resolve(account);
         } else {
           reject("Account doesn't exist.");
@@ -130,35 +111,26 @@ export default {
     },
     async validatorsFetch({ commit }) {
       const url = `${API}/staking/validators`;
-      const validators = (await axios.get(url)).data.result;
-      commit("validatorsSet", { validators });
-    },
-    async entityFetch({ state, commit }, { type }) {
-      const { chain_id } = state;
-      const url = `${API}/${chain_id}/${type}`;
-      const body = (await axios.get(url)).data.result;
-      commit("entitySet", { type, body });
+      const value = (await axios.get(url)).data.result;
+      commit("set", { key: "validators", value });
     },
     async accountUpdate({ state, commit }) {
       const url = `${API}/auth/accounts/${state.client.senderAddress}`;
       const acc = (await axios.get(url)).data;
-      const account = acc.result.value;
-      commit("accountUpdate", { account });
-    },
-    async entitySubmit({ state }, { type, body }) {
-      const { chain_id } = state;
-      const creator = state.client.senderAddress;
-      const base_req = { chain_id, from: creator };
-      const req = { base_req, creator, ...body };
-      const { data } = await axios.post(`${API}/${chain_id}/${type}`, req);
-      const { msg, fee, memo } = data.value;
-      return await state.client.signAndPost(msg, fee, memo);
+      const value = acc.result.value;
+      commit("set", { key: "account", value });
     },
     async transfersIncomingFetch({ state, commit }) {
       const address = state.client.senderAddress;
       const url = `${API}/txs?transfer.recipient=${address}&limit=100`;
-      const data = (await axios.get(url)).data;
-      commit("stateSet", "transfersIncoming", data);
+      const value = (await axios.get(url)).data.txs;
+      commit("set", { key: "transfersIncoming", value });
+    },
+    async transfersOutgoingFetch({ state, commit }) {
+      const address = state.client.senderAddress;
+      const url = `${API}/txs?message.sender=${address}&limit=100`;
+      const value = (await axios.get(url)).data.txs;
+      commit("set", { key: "transfersOutgoing", value });
     },
   },
 };

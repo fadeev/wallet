@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     account() {
-      return this.$store.state.account;
+      return this.$store.state.cosmos.account;
     },
   },
   methods: {

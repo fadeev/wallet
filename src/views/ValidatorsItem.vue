@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     validator() {
-      const validators = this.$store.state.validators;
+      const validators = this.$store.state.cosmos.validators;
       return find(validators, ["operator_address", this.address]);
     },
   },

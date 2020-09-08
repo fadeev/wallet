@@ -70,7 +70,7 @@ export default {
   computed: {
     validators() {
       const pool = this.stakingPool.bonded_tokens;
-      let validators = this.$store.state.validators;
+      let validators = this.$store.state.cosmos.validators;
       validators = validators.map((v) => {
         const voting_power = ((v.tokens * 100) / pool).toFixed(2);
         return { ...v, voting_power };
@@ -79,7 +79,7 @@ export default {
       return validators;
     },
     stakingPool() {
-      return this.$store.state.stakingPool;
+      return this.$store.state.cosmos.stakingPool;
     },
   },
 };

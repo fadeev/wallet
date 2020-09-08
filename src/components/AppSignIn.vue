@@ -195,10 +195,10 @@ export default {
   },
   computed: {
     account() {
-      return this.$store.state.account;
+      return this.$store.state.cosmos.account;
     },
     address() {
-      const { client } = this.$store.state;
+      const { client } = this.$store.state.cosmos;
       const address = client && client.senderAddress;
       return address;
     },
@@ -213,7 +213,7 @@ export default {
     async signIn() {
       if (this.mnemonicValid && !this.error) {
         const mnemonic = this.passwordClean;
-        this.$store.dispatch("accountSignIn", { mnemonic }).catch(() => {
+        this.$store.dispatch("cosmos/accountSignIn", { mnemonic }).catch(() => {
           this.error = true;
           setTimeout(() => {
             this.error = false;
@@ -222,7 +222,7 @@ export default {
       }
     },
     async signOut() {
-      this.$store.dispatch("accountSignOut");
+      this.$store.dispatch("cosmos/accountSignOut");
     },
   },
 };

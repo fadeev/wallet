@@ -32,7 +32,7 @@ export default {
     AppLayout,
   },
   created() {
-    this.$store.dispatch("init");
+    this.$store.dispatch("cosmos/init");
   },
 };
 </script>

@@ -64,10 +64,10 @@ export default {
       });
     },
     delegations() {
-      return this.$store.state.delegations;
+      return this.$store.state.cosmos.delegations;
     },
     validators() {
-      return this.$store.state.validators;
+      return this.$store.state.cosmos.validators;
     },
   },
   methods: {

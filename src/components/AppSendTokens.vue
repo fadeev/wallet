@@ -127,13 +127,13 @@ export default {
         memo: this.memo,
       };
       try {
-        await this.$store.dispatch("tokensSend", { ...payload });
+        await this.$store.dispatch("cosmos/tokensSend", { ...payload });
         console.log("success");
       } catch {
         console.log("error");
       }
       this.to_address = this.amount = this.memo = "";
-      await this.$store.dispatch("accountUpdate");
+      await this.$store.dispatch("cosmos/accountUpdate");
     },
   },
 };
